@@ -1,4 +1,4 @@
-# AutoLecturer Pipeline
+# AutoLecturer Pipeline.
 
 ## 0. Set Up the Environment and Prepare Data
 

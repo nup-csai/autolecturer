@@ -24,12 +24,10 @@ AUDIO_SETTINGS = {
 
 # Speech-to-text settings
 STT_SETTINGS = {
-    "model_type": "faster-whisper",  # Options: "faster-whisper", "vosk", "nemo"
-    "model_size": "base",  # for faster-whisper: "tiny", "base", "small", "medium", "large-v2"
+    "model_type": "vosk",  # Options: "faster-whisper", "vosk", "nemo"
     "language": "en",
-    "beam_size": 5,
-    "device": "cpu",  # "cpu" or "cuda"
-    "compute_type": "float32",  # "float32", "float16", "int8"
+    "vosk_model_path": "models/vosk",  # Path to Vosk model
+    "sample_rate": 16000,
 }
 
 # Text processing settings

@@ -1,10 +1,16 @@
 # test_audio_extraction.py
+import sys
+import os
+
+# Add the project root directory to Python path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from src.audio.extractor import AudioExtractor
 
 
 def main():
     # Путь к входному видеофайлу
-    video_path = "data/input/your_lecture.mp4"  # Замените на имя вашего файла
+    video_path = "data/input/lecture.mp4"  # Замените на имя вашего файла
 
     # Создаем экземпляр извлекателя аудио
     extractor = AudioExtractor()

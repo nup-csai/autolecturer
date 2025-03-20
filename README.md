@@ -136,7 +136,7 @@ For generating a talking-head lecturer:
 - (Optional) Talking head clips.
 
 #### Automate Video Editing:
-- Use Python’s `MoviePy` or `FFmpeg`.
+- Use Python's `MoviePy` or `FFmpeg`.
 - **Subtitles (Optional):**
   - Generate `.srt` or `.vtt` subtitles.
   - Save summary text with timestamps matching audio clips.
@@ -173,6 +173,49 @@ For generating a talking-head lecturer:
 
 ---
 
+## Usage Instructions
+
+### Basic Usage
+1. Place your lecture video in the `data/input` directory (name it `lecture.mp4` or use the `--video` option)
+2. Run the pipeline:
+```
+python main.py
+```
+
+### Command Line Options
+- `--video PATH` - Specify the path to the input video file
+- `--output DIR` - Specify the output directory for processed files
+- `--skip-existing` - Skip processing steps if output files already exist
+- `--no-extract-clips` - Skip extracting video clips
+- `--no-combine-clips` - Skip combining clips into a final video
+
+### Testing Individual Components
+You can test individual components of the pipeline using the test scripts:
+```
+python tests/test_audio_extraction.py  # Test audio extraction
+python tests/test_transcription.py     # Test speech-to-text
+python tests/test_text_cleaning.py     # Test text cleaning
+python tests/test_text_chunking.py     # Test text chunking
+python tests/test_video_clipper.py     # Test video clip extraction
+```
+
+## Pipeline Workflow
+
+### Full Pipeline
+1. **Audio Extraction**: Extract high-quality audio from the input video
+2. **Speech-to-Text**: Convert audio to text with timestamps using local STT models
+3. **Text Cleaning**: Clean and normalize the transcribed text
+4. **Text Chunking**: Divide text into logical paragraphs with main ideas
+5. **Video Clipping**: Extract video clips based on paragraph timestamps
+6. **Video Assembly**: Combine clips into a summarized video
+
+### Supported Features
+- Advanced text cleaning and normalization
+- Intelligent paragraph division based on content
+- Preservation of timestamp information between text and video
+- Automatic extraction of video clips for each logical paragraph
+- Combining clips into a summarized video under 2 minutes
+
 ## Final Thoughts
 ### Advantages of Local Processing
 - Ensures data privacy (no external API calls).
@@ -180,6 +223,4 @@ For generating a talking-head lecturer:
 - Offers fully automated lecture summarization.
 
 ### Typical Workflow:
-Audio Extraction → Local STT → Local LLM Summarization → Slide Mapping → (Optional) TTS → Video Assembly → Final Output.
-
-
+Audio Extraction → Local STT → Text Cleaning → Logical Paragraph Creation → Video Clip Extraction → Video Assembly → Final Output.

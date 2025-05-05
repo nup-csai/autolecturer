@@ -17,6 +17,7 @@ from gtts import gTTS
 from src.video_processor import VideoProcessor
 import summarize_text
 import create_avatar_video
+from src.bart_summarizer import Summarizer
 
 # Configuration (constant paths)
 TEXT_FILE = 'sample_text.txt'           # File with the original text
@@ -31,6 +32,7 @@ def main():
     parser.add_argument('--avatar', action='store_true', help='Create an avatar based on the text')
     parser.add_argument('--language', type=str, default='en', choices=['en', 'ru'], help='Text language (en - English, ru - Russian)')
     parser.add_argument('--youtube', type=str, default="https://www.youtube.com/watch?v=r4n79ZRepi8", help='YouTube video URL to download')
+    parser.add_argument('--model', type=str, default='facebook/bart-large-cnn', help='BART model to use for summarization')
     parser.add_argument('--skip-summarize', action='store_true', help='Skip summarization (use existing text in text_to_speak.txt)')
     args = parser.parse_args()
     
@@ -64,27 +66,42 @@ def main():
             print("Error extracting text from video. Check the video file.")
             if not os.path.exists(TEXT_FILE):
                 return
-    
-    # Step 2: Summarize text using Claude API
+
     if args.avatar and not args.skip_summarize:
-        print("\n=== SUMMARIZING TEXT USING CLAUDE API ===")
-        
+        print("\n=== SUMMARIZING TEXT USING LOCAL BART MODEL ===")
+
         # Check if the source text file exists
         if not os.path.isfile(TEXT_FILE):
             print(f"Error: File {TEXT_FILE} not found")
             return
-        
-        # Run summarization script
-        summarize_args = argparse.Namespace(
-            input=TEXT_FILE,
-            output=SUMMARIZED_TEXT_FILE,
-            api_key=None,  # Uses default key from the file
-            max_length=500
-        )
-        
-        # Call main() from summarize_text module
-        summarize_text.main()
-        
+
+        try:
+            # Read source text
+            with open(TEXT_FILE, 'r', encoding='utf-8') as file:
+                text = file.read()
+                if not text.strip():
+                    print(f"Error: File {TEXT_FILE} is empty")
+                    return
+                print(f"Read text of length {len(text)} characters")
+
+            # Initialize BART summarizer
+            print(f"Initializing BART summarizer with model: {args.model}")
+            summarizer = Summarizer(model_name=args.model)
+
+            # Summarize text
+            print("Summarizing text... This may take a while for longer texts")
+            summary = summarizer.summarize(text)
+
+            # Save summarized text
+            with open(SUMMARIZED_TEXT_FILE, 'w', encoding='utf-8') as file:
+                file.write(summary)
+            print(f"Summary saved to file: {SUMMARIZED_TEXT_FILE}")
+            print(f"Summary length: {len(summary)} characters")
+
+        except Exception as e:
+            print(f"Error during summarization: {e}")
+            return
+
         # Check that the summarized text file was created
         if not os.path.exists(SUMMARIZED_TEXT_FILE):
             print(f"Error: Failed to create summarized text in {SUMMARIZED_TEXT_FILE}")

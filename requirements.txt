@@ -1,0 +1,15 @@
+pytube>=12.1.0
+yt-dlp>=2023.3.4
+whisper>=1.0.0
+torch>=1.13.0
+transformers>=4.25.1
+diffusers==0.16.0
+huggingface_hub==0.15.1
+moviepy>=1.0.3
+gtts>=2.3.1
+scikit-learn>=1.0.2
+numpy>=1.22.0
+openai-whisper>=20230314
+sentence-transformers>=2.2.2
+accelerate>=0.20.3
+TTS>=0.17.0
